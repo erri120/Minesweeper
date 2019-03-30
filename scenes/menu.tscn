@@ -3,7 +3,7 @@
 [ext_resource path="res://fonts/BebasNeue-Regular.otf" type="DynamicFontData" id=1]
 [ext_resource path="res://scripts/Start.gd" type="Script" id=2]
 [ext_resource path="res://scripts/Quit.gd" type="Script" id=3]
-[ext_resource path="res://scripts/StartGame.gd" type="Script" id=4]
+[ext_resource path="res://scripts/startButton.gd" type="Script" id=4]
 
 [sub_resource type="DynamicFont" id=1]
 size = 60
@@ -70,9 +70,23 @@ margin_top = 300.0
 margin_right = 713.0
 margin_bottom = 378.0
 custom_fonts/font = SubResource( 1 )
-text = "Hard (no flags)"
+text = "Hard"
 script = ExtResource( 4 )
-field_width = 20
+field_width = 30
+field_height = 18
+
+[node name="Extreme" type="Button" parent="." groups=[
+"Buttons",
+]]
+visible = false
+margin_left = 310.0
+margin_top = 400.0
+margin_right = 713.0
+margin_bottom = 478.0
+custom_fonts/font = SubResource( 1 )
+text = "Extreme (no flags)"
+script = ExtResource( 4 )
+field_width = 30
 field_height = 18
 allow_flags = false
 

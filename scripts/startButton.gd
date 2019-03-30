@@ -11,4 +11,4 @@ func _pressed():
 	global.width = field_width
 	global.height = field_height
 	global.allow_flags = allow_flags
-	get_tree().change_scene("res://scenes/main.tscn")
+	global.change_sceen("main.tscn")
