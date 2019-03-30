@@ -22,13 +22,13 @@ func _ready():
 
 func _input(event):
 	if event is InputEventMouseButton && !lost:
-		if (event.is_action_pressed("p_click")):
-			var event_pos = event.global_position
-			var cell_pos = world_to_map(event_pos)
-			cell_pos.x = cell_pos.x-16
-			cell_pos.y = cell_pos.y-9
-			if(cell_pos.x+(board_width/2)<board_width && cell_pos.y+(board_height/2)<board_height \
-			&& cell_pos.x+board_width>board_width/2 && cell_pos.y+board_height>board_height/2):
+		var event_pos = event.global_position
+		var cell_pos = world_to_map(event_pos)
+		cell_pos.x = cell_pos.x-16
+		cell_pos.y = cell_pos.y-9
+		if(cell_pos.x+(board_width/2)<board_width && cell_pos.y+(board_height/2)<board_height \
+		&& cell_pos.x+board_width>board_width/2 && cell_pos.y+board_height>board_height/2):
+			if (event.is_action_pressed("p_click")):
 				if(matrix[cell_pos.x+(board_width/2)][cell_pos.y+(board_height/2)] == 0):
 					set_cellv(cell_pos,3,false,false)
 				else:
@@ -37,3 +37,5 @@ func _input(event):
 					lost = true
 					for i in get_tree().get_nodes_in_group("Control"):
 						i.show()
+			if (event.is_action_pressed("p_flag")):
+				set_cellv(cell_pos,2,false,false)
