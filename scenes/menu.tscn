@@ -28,9 +28,9 @@ script = ExtResource( 2 )
 "Menu",
 ]]
 margin_left = 310.0
-margin_top = 240.0
+margin_top = 220.0
 margin_right = 713.0
-margin_bottom = 318.0
+margin_bottom = 298.0
 custom_fonts/font = SubResource( 1 )
 text = "Quit"
 script = ExtResource( 3 )

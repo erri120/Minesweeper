@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://tiles/blank.png" type="Texture" id=1]
 [ext_resource path="res://tiles/bomb.png" type="Texture" id=2]
@@ -12,6 +12,7 @@
 [ext_resource path="res://tiles/near_6.png" type="Texture" id=10]
 [ext_resource path="res://tiles/near_7.png" type="Texture" id=11]
 [ext_resource path="res://tiles/near_8.png" type="Texture" id=12]
+[ext_resource path="res://tiles/selected.png" type="Texture" id=13]
 
 [node name="Node" type="Node"]
 
@@ -62,4 +63,8 @@ texture = ExtResource( 11 )
 [node name="near_8" type="Sprite" parent="."]
 position = Vector2( 368, 16 )
 texture = ExtResource( 12 )
+
+[node name="selected" type="Sprite" parent="."]
+position = Vector2( 400, 16 )
+texture = ExtResource( 13 )
 

@@ -3,7 +3,7 @@ extends TileMap
 #offset of the tile position when clicking (gay af)
 const WIDTH_OFFSET = 16
 const HEIGHT_OFFSET = 9
-const RATIO = 10
+const RATIO = 7
 
 #int containing the board width and height
 var board_width = 10
@@ -16,6 +16,9 @@ var board=[]
 var mines = 0
 #int containing the amount of empty cells
 var empty = 0
+#Vector2 containing the player loc
+var player_pos = Vector2()
+var last_pos = Vector2()
 
 #function showing the game over screen
 func game_over():
@@ -105,6 +108,8 @@ func _ready():
 	board_height = global.height
 	mines = 0
 	empty = 0
+	player_pos = Vector2(0,0)
+	last_pos = Vector2(0,0)
 	#filling the board-matrix
 	for i in range(-(board_width/2), board_width/2):
 		board.append([])
@@ -161,3 +166,38 @@ func _input(event):
 					changed_to = 2
 				if get_cellv(cell_pos) == 2 and changed_to == 0:
 					set_cellv(cell_pos,0,false,false)
+	#other method of input is via keyboard
+	if event is InputEventKey:
+		if(event.is_action_pressed("p_down")):
+			player_pos.y+=1
+		if(event.is_action_pressed("p_up")):
+			player_pos.y-=1
+		if(event.is_action_pressed("p_left")):
+			player_pos.x-=1
+		if(event.is_action_pressed("p_right")):
+			player_pos.x+=1
+		if(get_cellv(player_pos)==0):
+			set_cellv(player_pos,12,false,false)
+			if(get_cellv(last_pos)==12):
+				set_cellv(last_pos,0,false,false)
+			last_pos = player_pos
+		var m_pos = player_pos
+		m_pos.x = player_pos.x+(board_width/2)
+		m_pos.y = player_pos.y+(board_height/2)
+		if(event.is_action_pressed("p_place")):
+			if(board[m_pos.x][m_pos.y] == 0):
+				#player hit an empty tile
+				set_cellv(player_pos,4,false,false)
+				change_tile(player_pos)
+			else:
+				#player hit a mine
+				set_cellv(player_pos,1,false,false)
+				game_over()
+		var changed_to = 0
+		if(event.is_action_pressed("p_flag2")\
+		&& global.allow_flags):
+			if get_cellv(player_pos) == 0 || get_cellv(player_pos) == 12:
+				set_cellv(player_pos,2,false,false)
+				changed_to = 2
+			if get_cellv(player_pos) == 2 and changed_to == 0:
+				set_cellv(player_pos,0,false,false)
