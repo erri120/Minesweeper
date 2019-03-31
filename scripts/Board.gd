@@ -3,14 +3,19 @@ extends TileMap
 #offset of the tile position when clicking (gay af)
 const WIDTH_OFFSET = 16
 const HEIGHT_OFFSET = 9
+const RATIO = 10
 
 #int containing the board width and height
 var board_width = 10
 var board_height = 10
-#bool true if game is over and player lost
+#bool is true if game is over
 var game_over = false
 #2D matrix that represents the board, contains 2(block), 1(mine) or 0(empty)
 var board=[]
+#int containing the amount of mines
+var mines = 0
+#int containing the amount of empty cells
+var empty = 0
 
 #function showing the game over screen
 func game_over():
@@ -19,13 +24,20 @@ func game_over():
 	for i in get_tree().get_nodes_in_group("Control"):
 		i.show()
 
+#function showing the you won screen
+func you_won():
+	game_over = true
+	for i in get_tree().get_nodes_in_group("won"):
+		i.show()
+
 #function that shows all mines at the end of the game
 func show_mines():
 	if game_over:
 		for i in range(-(board_width/2), board_width/2):
 			for j in range(-(board_height/2), board_height/2):
 				if board[i+(board_width/2)][j+(board_height/2)] == 1:
-					set_cellv(Vector2(i,j),1,false,false)
+					if(get_cellv(Vector2(i,j))!=2):
+						set_cellv(Vector2(i,j),1,false,false)
 
 #function that returns the index of the tile based on the number of mines surrounding it
 func tile_index(mines):
@@ -58,6 +70,11 @@ func mines_nearby(m_pos):
 #function that changes the tile based on the number of mines surrounding it
 #takes the positing of the tile on the map
 func change_tile(cell_pos):
+	#removing on empty cell
+	empty-=1
+	#checking if there are no empty cells left
+	if empty == 0:
+		you_won()
 	#changing the cell positing to the position in the board-matrix
 	var m_pos = cell_pos
 	m_pos.x = cell_pos.x+(board_width/2)
@@ -71,9 +88,9 @@ func change_tile(cell_pos):
 	#!!!RECURSIVE!!!
 	if(mines == 0):
 		for x in range(cell_pos.x-1,cell_pos.x+2):
-			if ((x+(board_width/2)<board_width) and x>(-(board_width/2))):
+			if ((x+(board_width/2)<board_width) and x>=(-(board_width/2))):
 				for y in range(cell_pos.y-1,cell_pos.y+2):
-					if ((y+(board_height/2)<board_height) and y>(-(board_height/2))):
+					if ((y+(board_height/2)<board_height) and y>=(-(board_height/2))):
 						var xycell_pos = Vector2(x,y)
 						var xycell_m_pos = xycell_pos
 						xycell_m_pos.x = xycell_pos.x+(board_width/2)
@@ -86,8 +103,8 @@ func _ready():
 	game_over = false
 	board_width = global.width
 	board_height = global.height
-	var mines = 0
-	var empty = 0
+	mines = 0
+	empty = 0
 	#filling the board-matrix
 	for i in range(-(board_width/2), board_width/2):
 		board.append([])
@@ -97,17 +114,14 @@ func _ready():
 			set_cell(i,j,0,false,false)
 			#getting either 1 or 0 and putting them into the board-matrix
 			randomize()
-			var rand = randi()%3+0
+			var rand = randi()%RATIO+0
 			board[i+(board_width/2)].append([])
-			if rand<=1:
+			if rand>=1:
 				board[i+(board_width/2)][j+(board_height/2)] = 0
 				empty+=1
 			else:
 				board[i+(board_width/2)][j+(board_height/2)] = 1
 				mines+=1
-	#print("Total tiles: "+str(board_width*board_height)\
-	#  +", mines: "+str(mines)+", empty: "+str(empty))
-	#print("Board-matrix: "+str(board))
 			
 func _input(event):
 	#checking if player is clicking on a tile and the game is not over
@@ -126,8 +140,8 @@ func _input(event):
 		#checking if the click is inside the board
 		if(m_pos.x < board_width \
 		  && m_pos.y < board_height \
-		  && cell_pos.x+board_width > board_width/2 \
-		  && cell_pos.y+board_height > board_height/2):
+		  && cell_pos.x+board_width >= board_width/2 \
+		  && cell_pos.y+board_height >= board_height/2):
 			#checking if player left or right clicks
 			if(event.is_action_pressed("p_click")):
 				if(board[m_pos.x][m_pos.y] == 0):
